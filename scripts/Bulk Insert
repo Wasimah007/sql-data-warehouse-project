@@ -1,6 +1,8 @@
 
 create or alter procedure bronze.load_bronze as 
 begin
+		declare @start_time datetime, @end_time datetime
+begin try
   print '=================================='
   print 'Loading Bronze layer'
   print '=================================='
@@ -8,7 +10,9 @@ begin
   print 'Loading CRM Tables'
   print '**********************'
 ------------------   BULK INSERT   --------------
+
 						--1
+set @start_time = getdate()
 truncate table bronze.crm_cust_info
 bulk insert bronze.crm_cust_info
 from 'C:\Users\waseem.a\Downloads\sql-data-warehouse-project (1)\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
@@ -20,9 +24,12 @@ tablock
 
 )
 
-
+set @end_time = getdate()
+print '>> Load Duration' + cast (datediff(second, @start_time, @end_time) as nvarchar) + 'seconds'
+print '----------------------------------'
 ------------------   BULK INSERT   --------------
 						--2
+set @start_time = getdate()
 truncate table bronze.crm_prod_info
 bulk insert bronze.crm_prod_info
 from 'C:\Users\waseem.a\Downloads\sql-data-warehouse-project (1)\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
@@ -33,10 +40,13 @@ fieldterminator = ',',
 tablock
 
 )
-
+set @end_time = getdate()
+print '>> Load Duration' + cast (datediff(second, @start_time, @end_time) as nvarchar) + 'seconds'
+print '----------------------------------'
 
 ------------------   BULK INSERT   --------------
 						--3
+set @start_time = getdate()
 truncate table bronze.crm_sales_details
 bulk insert bronze.crm_sales_details
 from 'C:\Users\waseem.a\Downloads\sql-data-warehouse-project (1)\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
@@ -47,12 +57,16 @@ fieldterminator = ',',
 tablock
 
 )
+set @end_time = getdate()
+print '>> Load Duration' + cast (datediff(second, @start_time, @end_time) as nvarchar) + 'seconds'
+print '----------------------------------'
 
   print 'Loading ERP Tables'
   print '**********************'
 
 ------------------   BULK INSERT   --------------
 						--4
+set @start_time = getdate()
 truncate table bronze.erp_CUST_AZ12
 bulk insert bronze.erp_CUST_AZ12
 from 'C:\Users\waseem.a\Downloads\sql-data-warehouse-project (1)\sql-data-warehouse-project\datasets\source_erp\CUST_AZ12.csv'
@@ -63,10 +77,14 @@ fieldterminator = ',',
 tablock
 
 )
+set @end_time = getdate()
+print '>> Load Duration' + cast (datediff(second, @start_time, @end_time) as nvarchar) + 'seconds'
+print '----------------------------------'
 
 
 ------------------   BULK INSERT   --------------
 						--5
+set @start_time = getdate()
 truncate table bronze.erp_LOC_A101
 bulk insert bronze.erp_LOC_A101
 from 'C:\Users\waseem.a\Downloads\sql-data-warehouse-project (1)\sql-data-warehouse-project\datasets\source_erp\LOC_A101.csv'
@@ -77,10 +95,13 @@ fieldterminator = ',',
 tablock
 
 )
-
+set @end_time = getdate()
+print '>> Load Duration' + cast (datediff(second, @start_time, @end_time) as nvarchar) + 'seconds'
+print '----------------------------------'
 
 ------------------   BULK INSERT   --------------
 						--6
+set @start_time = getdate()
 truncate table bronze.erp_PX_CAT_G1V2
 bulk insert bronze.erp_PX_CAT_G1V2
 from 'C:\Users\waseem.a\Downloads\sql-data-warehouse-project (1)\sql-data-warehouse-project\datasets\source_erp\PX_CAT_G1V2.csv'
@@ -91,11 +112,20 @@ fieldterminator = ',',
 tablock
 
 )
+set @end_time = getdate()
+print '>> Load Duration' + cast (datediff(second, @start_time, @end_time) as nvarchar) + 'seconds'
+print '----------------------------------'
 
-
+end try
+begin catch
+	print '============================='
+	print ' ERROR occured during loading bronze layer'
+	print 'Error message ' + ERROR_Message()
+	print 'Error message' + cast (error_number() as nvarchar)
+	print 'Error message' + cast (error_state() as nvarchar)
+end catch
 end
 
 --select * from bronze.erp_PX_CAT_G1V2
 --select count(*) as totalrows from bronze.erp_PX_CAT_G1V2
-
 --exec bronze.load_bronze
