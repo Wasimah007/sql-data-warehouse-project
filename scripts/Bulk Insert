@@ -1,6 +1,12 @@
+
 create or alter procedure bronze.load_bronze as 
 begin
+  print '=================================='
+  print 'Loading Bronze layer'
+  print '=================================='
 
+  print 'Loading CRM Tables'
+  print '**********************'
 ------------------   BULK INSERT   --------------
 						--1
 truncate table bronze.crm_cust_info
@@ -13,8 +19,7 @@ fieldterminator = ',',
 tablock
 
 )
-select * from bronze.crm_cust_info
-select count(*) as totalrows from bronze.crm_cust_info
+
 
 ------------------   BULK INSERT   --------------
 						--2
@@ -28,8 +33,7 @@ fieldterminator = ',',
 tablock
 
 )
-select * from bronze.crm_prod_info
-select count(*) as totalrows from bronze.crm_prod_info
+
 
 ------------------   BULK INSERT   --------------
 						--3
@@ -43,8 +47,9 @@ fieldterminator = ',',
 tablock
 
 )
-select * from bronze.crm_sales_details
-select count(*) as totalrows from bronze.crm_sales_details
+
+  print 'Loading ERP Tables'
+  print '**********************'
 
 ------------------   BULK INSERT   --------------
 						--4
@@ -58,8 +63,7 @@ fieldterminator = ',',
 tablock
 
 )
-select * from bronze.erp_CUST_AZ12
-select count(*) as totalrows from bronze.erp_CUST_AZ12
+
 
 ------------------   BULK INSERT   --------------
 						--5
@@ -73,8 +77,7 @@ fieldterminator = ',',
 tablock
 
 )
-select * from bronze.erp_LOC_A101
-select count(*) as totalrows from bronze.erp_LOC_A101
+
 
 ------------------   BULK INSERT   --------------
 						--6
@@ -88,7 +91,11 @@ fieldterminator = ',',
 tablock
 
 )
-select * from bronze.erp_PX_CAT_G1V2
-select count(*) as totalrows from bronze.erp_PX_CAT_G1V2
+
 
 end
+
+--select * from bronze.erp_PX_CAT_G1V2
+--select count(*) as totalrows from bronze.erp_PX_CAT_G1V2
+
+--exec bronze.load_bronze
