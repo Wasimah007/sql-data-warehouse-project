@@ -1,6 +1,5 @@
-
-
-
+create or alter procedure bronze.load_bronze as 
+begin
 
 ------------------   BULK INSERT   --------------
 						--1
@@ -91,3 +90,5 @@ tablock
 )
 select * from bronze.erp_PX_CAT_G1V2
 select count(*) as totalrows from bronze.erp_PX_CAT_G1V2
+
+end
